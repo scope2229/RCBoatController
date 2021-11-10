@@ -82,7 +82,10 @@
     ".prettirerrc.js",
     "jest.config.js",
     "index.js",
-    "src/app/App.js"
+    "src/app/App.js",
+    "jest",
+    "jest.setup.js",
+    "__tests__",
   ],
   "compileOnSave": true
 }

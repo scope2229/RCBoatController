@@ -19,15 +19,7 @@ const HomeScreen: FunctionComponent = () => {
 };
 
 const styles = StyleSheet.create({
-  joystick: {
-    backgroundColor: 'grey',
-    opacity: 0.5,
-    borderColor: 'black',
-    borderWidth: 2,
-    position: 'absolute',
-    bottom: 10,
-    left: 10,
-  }
+  
 })
 
 export default HomeScreen;

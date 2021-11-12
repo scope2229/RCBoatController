@@ -8,7 +8,7 @@ type JoystickProps = {
 export default class Joystick extends Component<JoystickProps> {
 
   centerPosition() {
-    this.pan.setValue({x:0,y:0})
+    this.pan.setValue({ x: 0, y: 0 })
     Animated.timing(
       new Animated.Value(0),
       {
@@ -37,16 +37,19 @@ export default class Joystick extends Component<JoystickProps> {
       //   y: this.pan.y._value
       // });
     },
-    onPanResponderMove: Animated.event([
-      null,
-      { dx: this.pan.x, dy: this.pan.y }
-    ],
-      { listener: (_event, _gestureState) => {
-        this.props.setXY({x: this.pan.x, y: this.pan.y})
-      }}
+    onPanResponderMove: Animated.event(
+      [
+        null,
+        { dx: this.pan.x, dy: this.pan.y },
+      ],
+      {
+        listener: (_event, _gestureState) => {
+          return this.props.setXY({ x: this.pan.x, y: this.pan.y });
+        }
+      }
     ),
     onPanResponderRelease: () => {
-      this.props.setXY({x:0,y:0});
+      this.props.setXY({ x: 0, y: 0 });
       this.pan.flattenOffset();
       this.centerPosition();
     }

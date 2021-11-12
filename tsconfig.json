@@ -21,7 +21,7 @@
 
     /* Strict Type-Checking Options */
     "strict": true,                           /* Enable all strict type-checking options. */
-    "noImplicitAny": true,                    /* Raise error on expressions and declarations with an implied 'any' type. */
+    "noImplicitAny": false,                    /* Raise error on expressions and declarations with an implied 'any' type. */
     "forceConsistentCasingInFileNames": true, /* Raise error if file names casings are not consistent */ 
     // "strictNullChecks": true,              /* Enable strict null checks. */
     // "strictFunctionTypes": true,           /* Enable strict checking of function types. */
@@ -82,7 +82,6 @@
     ".prettirerrc.js",
     "jest.config.js",
     "index.js",
-    "src/app/App.js",
     "jest",
     "jest.setup.js",
     "__tests__",

@@ -7,26 +7,21 @@
  *
  * @format
  */
-
+import 'react-native-gesture-handler';
 import React, { useEffect } from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
   useColorScheme,
-  View,
 } from 'react-native';
 
 import RNBootSplash from "react-native-bootsplash";
 
 import {
   Colors,
-  Header,
-  LearnMoreLinks,
 } from 'react-native/Libraries/NewAppScreen';
 
 import Orientation from 'react-native-orientation-locker';
+import Navigator from './navigation/navigator';
 
 const App = () => {
 
@@ -48,18 +43,7 @@ const App = () => {
   });
 
   return (
-    <SafeAreaView style={styles.backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={styles.backgroundStyle}>
-        <Header />
-        <View
-          style={styles.viewStyle}>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <Navigator/>
   );
 };
 

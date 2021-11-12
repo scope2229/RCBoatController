@@ -109,5 +109,3 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
   }
 });
-
-// export default Joystick;

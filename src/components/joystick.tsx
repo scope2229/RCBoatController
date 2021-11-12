@@ -6,18 +6,13 @@ type JoystickProps = {
 }
 
 export default class Joystick extends Component<JoystickProps> {
-  
-  state = {
-    x: 0,
-    y: 0,
-  };
 
   centerPosition() {
     this.pan.setValue({x:0,y:0})
     Animated.timing(
       new Animated.Value(0),
       {
-        toValue: this.state.x,
+        toValue: 0,
         duration: 0,
         useNativeDriver: false
       }
@@ -25,12 +20,13 @@ export default class Joystick extends Component<JoystickProps> {
     Animated.timing(
       new Animated.Value(0),
       {
-        toValue: this.state.y,
+        toValue: 0,
         duration: 0,
         useNativeDriver: false
       }
     ).start()
   }
+
   pan = new Animated.ValueXY();
   panResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,

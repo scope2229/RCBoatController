@@ -1,3 +1,4 @@
+import SpeedControl from "./speedControl";
 import Joystick from "./joystick";
 
-export { Joystick };
+export { Joystick, SpeedControl };

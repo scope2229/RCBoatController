@@ -1,88 +1,83 @@
-import React, { Component } from "react";
-import { Animated, View, StyleSheet, PanResponder } from "react-native";
+import React, { FunctionComponent, Dispatch, useEffect, useState } from "react";
+import { StyleSheet, View } from "react-native";
+import {
+  PanGestureHandler,
+  PanGestureHandlerGestureEvent,
+} from "react-native-gesture-handler";
 
-type JoystickProps = {
-  setXY: any
+import Animated, {
+  useAnimatedGestureHandler,
+  useSharedValue,
+  useAnimatedStyle,
+  runOnJS,
+} from "react-native-reanimated";
+
+interface JoystickProps {
+  setXY: any;
 }
 
-export default class Joystick extends Component<JoystickProps> {
+const Joystick: FunctionComponent<JoystickProps> = ({
+  setXY
+}) => {
 
-  centerPosition() {
-    this.pan.setValue({ x: 0, y: 0 })
-    Animated.timing(
-      new Animated.Value(0),
-      {
-        toValue: 0,
-        duration: 0,
-        useNativeDriver: false
-      }
-    ).start()
-    Animated.timing(
-      new Animated.Value(0),
-      {
-        toValue: 0,
-        duration: 0,
-        useNativeDriver: false
-      }
-    ).start()
+  const translateX = useSharedValue(0);
+  const translateY = useSharedValue(0);
+  const maxXY = 60
+  const minXY = -60
+
+  const calcValue = (value: number) => {
+    let v = Math.round(Math.abs(value))
+    if (value > 0) {
+      return -((v / maxXY) * 100).toFixed(0)
+    } else {
+      return (((v / maxXY) * 100).toFixed(0))
+    }
   }
 
-  pan = new Animated.ValueXY();
-  panResponder = PanResponder.create({
-    onStartShouldSetPanResponder: () => true,
-    onMoveShouldSetPanResponder: () => true,
-    onPanResponderGrant: () => {
-      // this.pan.setOffset({
-      //   x: this.pan.x._value,
-      //   y: this.pan.y._value
-      // });
+  const updateCoords = (x: number, y: number) => {
+    setXY({ x: calcValue(x), y: calcValue(y) })
+  }
+
+  const panGestureHandler = useAnimatedGestureHandler<PanGestureHandlerGestureEvent>({
+    onStart: (_) => {},
+    onActive: (event) => {
+      translateX.value = (event.translationX > maxXY) ? maxXY :
+        (event.translationX < minXY) ? minXY :
+          event.translationX;
+      translateY.value = (event.translationY > maxXY) ? maxXY :
+        (event.translationY < minXY) ? minXY :
+          event.translationY;
+
+      runOnJS(updateCoords)(translateX.value, translateY.value);
     },
-    onPanResponderMove: Animated.event(
-      [
-        null,
-        { dx: this.pan.x, dy: this.pan.y },
-      ],
-      {
-        listener: (_event, _gestureState) => {
-          return this.props.setXY({ x: this.pan.x, y: this.pan.y });
-        }
-      }
-    ),
-    onPanResponderRelease: () => {
-      this.props.setXY({ x: 0, y: 0 });
-      this.pan.flattenOffset();
-      this.centerPosition();
+    onEnd: (_event) => {
+      translateX.value = 0;
+      translateY.value = 0;
+
+      runOnJS(updateCoords)(0, 0);
+    },
+  });
+
+  const rStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        { translateX: translateX.value },
+        { translateY: translateY.value }
+      ]
     }
   });
 
-  render() {
-    return (
-      <View style={styles.container}>
-        <Animated.View style={styles.outerJoystick}>
-          <Animated.View
-            style={{
-              transform: [{
-                translateX: this.pan.x.interpolate({
-                  inputRange: [-100, 100],
-                  outputRange: [0, 100],
-                  extrapolate: 'clamp'
-                })
-              }, {
-                translateY: this.pan.y.interpolate({
-                  inputRange: [-100, 100],
-                  outputRange: [0, 100],
-                  extrapolate: 'clamp'
-                })
-              }]
-            }}
-            {...this.panResponder.panHandlers}
-          >
-            <View style={styles.innerJoystick} />
+  return (
+    <View style={styles.container}>
+      <View style={styles.outerJoystick}>
+        <PanGestureHandler onGestureEvent={panGestureHandler}>
+          <Animated.View style={rStyle}>
+            <View style={styles.innerJoystick}></View>
           </Animated.View>
-        </Animated.View>
+        </PanGestureHandler>
       </View>
-    );
-  };
+    </View>
+  )
 }
 
 const styles = StyleSheet.create({
@@ -91,24 +86,28 @@ const styles = StyleSheet.create({
     height: 175,
     flex: 1,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    position: 'absolute',
+    bottom: 25,
+    left: 25,
   },
   outerJoystick: {
     width: 175,
     height: 175,
     borderRadius: 200,
     backgroundColor: 'lightgrey',
-    position: 'absolute',
-    bottom: 50,
-    left: 50,
     opacity: 0.5,
     borderColor: 'black',
     borderWidth: 2,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   innerJoystick: {
-    width: 75,
-    height: 75,
+    width: 60,
+    height: 60,
     borderRadius: 200,
     backgroundColor: 'black',
   }
 });
+
+export default Joystick;

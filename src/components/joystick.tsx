@@ -1,4 +1,4 @@
-import React, { FunctionComponent, Dispatch, useEffect, useState } from "react";
+import React, { FunctionComponent } from "react";
 import { StyleSheet, View } from "react-native";
 import {
   PanGestureHandler,

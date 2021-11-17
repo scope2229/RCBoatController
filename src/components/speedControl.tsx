@@ -37,16 +37,14 @@ const SpeedControl: FunctionComponent<JoystickProps> = ({
   }
 
   const updateCoords = (y) => {
-    console.log("CALC", calcvalue(y))
     setSpeed({y: calcvalue(y)})
   }
 
   const panGestureHandler = useAnimatedGestureHandler<PanGestureHandlerGestureEvent>({
-    onStart: (_, ctx) => {
+    onStart: (_, ctx: { startY }) => {
       ctx.startY = translateY.value;
     },
-    onActive: (event, ctx) => {
-      console.log("ctx", ctx.startX, "MAX", SLIDER_MIN_MAX, "Y", translateY);
+    onActive: (event, ctx: { startY }) => {
       translateY.value = ctx.startY + event.translationY;
       if (translateY.value > SLIDER_MIN_MAX) {
         if (translateY.value == SLIDER_MIN_MAX) {
